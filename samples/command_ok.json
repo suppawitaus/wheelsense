@@ -1,0 +1,7 @@
+{
+  "schema": "1.0",
+  "ts": 1724563250,
+  "action": "relay_set",
+  "args": { "channel": 1, "on": true },
+  "requestId": "ab12cd"
+}

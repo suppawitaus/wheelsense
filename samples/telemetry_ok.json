@@ -1,0 +1,7 @@
+{
+  "schema": "1.0",
+  "ts": 1724563200,
+  "sensor": "bme280",
+  "values": { "temp_c": 28.3, "hum_pct": 61.2, "press_hpa": 1006.5 },
+  "meta": { "rssi_dbm": -58 }
+}

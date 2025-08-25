@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Status v1.0",
+  "type": "object",
+  "required": ["schema", "ts", "status"],
+  "properties": {
+    "schema": { "type": "string", "const": "1.0" },
+    "ts": { "type": "integer", "minimum": 0 },
+    "status": { "type": "string", "enum": ["online", "offline"] },
+    "fw": { "type": "string", "maxLength": 32 },
+    "ack": {
+      "type": "object",
+      "required": ["requestId", "ok"],
+      "properties": {
+        "requestId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "ok": { "type": "boolean" },
+        "msg": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Telemetry v1.0",
+  "type": "object",
+  "required": ["schema", "ts", "sensor", "values"],
+  "properties": {
+    "schema": { "type": "string", "const": "1.0" },
+    "ts": { "type": "integer", "minimum": 0 },
+    "sensor": { "type": "string", "minLength": 1, "maxLength": 32 },
+    "values": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": ["number", "integer", "boolean", "string"] }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": { "type": ["number", "integer", "boolean", "string"] }
+    },
+    "ack": {
+      "type": "object",
+      "required": ["requestId", "ok"],
+      "properties": {
+        "requestId": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "ok": { "type": "boolean" },
+        "msg": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false}
