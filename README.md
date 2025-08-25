@@ -1,8 +1,18 @@
-# Wheelsense (Steps 1–2)
+## Step 2 — Infrastructure (Docker dev-first)
 
-Dev-first stack with Mosquitto (MQTT), FastAPI API, and Next.js web.
+This repo ships with a dev-first stack:
+- **mosquitto** (MQTT broker with auth)
+- **api** (FastAPI backend, to be implemented in Step 3)
+- **web** (Next.js frontend, to be implemented in Step 4)
 
-## Quick start
-```powershell
-Copy-Item .env.example .env
+### Quick start
+
+```bash
+# 1. Copy env
+cp .env.example .env
+
+# 2. Build and run the stack
 docker compose up -d --build
+
+# 3. Check logs
+docker compose logs -f mosquitto
