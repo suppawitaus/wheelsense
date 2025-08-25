@@ -1,0 +1,74 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: wheelsense_mosquitto
+    ports:
+      - "1883:1883"
+    environment:
+      - MQTT_USER=${MQTT_USER}
+      - MQTT_PASS=${MQTT_PASS}
+    volumes:
+      - ./infra/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    command: >
+      sh -c "
+      install -d -m 0700 /mosquitto/data &&
+      if [ ! -f /mosquitto/data/pwfile ]; then
+        touch /mosquitto/data/pwfile &&
+        mosquitto_passwd -b /mosquitto/data/pwfile \"$${MQTT_USER}\" \"$${MQTT_PASS}\";
+      fi &&
+      chown mosquitto:mosquitto /mosquitto/data/pwfile &&
+      chmod 0600 /mosquitto/data/pwfile &&
+      exec mosquitto -c /mosquitto/config/mosquitto.conf
+      "
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_sub -h localhost -u \"$MQTT_USER\" -P \"$MQTT_PASS\" -t $$SYS/broker/version -C 1 -W 2 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./apps/api
+    container_name: wheelsense_api
+    env_file: .env
+    environment:
+      - TZ=Asia/Bangkok
+    ports:
+      - "8000:8000"
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/health | grep -q '\"status\":\"ok\"'"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./apps/web
+    container_name: wheelsense_web
+    env_file: .env
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+      - TZ=Asia/Bangkok
+      - NODE_ENV=development
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000 || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:

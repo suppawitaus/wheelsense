@@ -1,3 +1,35 @@
-.venv/
+# OS
+.DS_Store
+Thumbs.db
+
+# Env & secrets
+.env
+*.env.local
+
+# Node / Next.js
+apps/web/node_modules/
+apps/web/.next/
+apps/web/out/
+npm-debug.log*
+
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+
+# Docker
+docker-data/
+*.log
+
+# Editor
+.vscode/
+.idea/
+
+# Misc
+coverage/
+dist/
+build/

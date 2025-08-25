@@ -1,0 +1,11 @@
+# Normalize text to LF in repo
+* text=auto
+
+# Force LF for files sensitive to CRLF
+*.sh           text eol=lf
+*.ps1          text eol=lf
+*.yml          text eol=lf
+*.yaml         text eol=lf
+Dockerfile     text eol=lf
+*.Dockerfile   text eol=lf
+infra/mosquitto.conf text eol=lf
